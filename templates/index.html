@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Counter</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #a8edea, #fed6e3); /* Multi-color gradient background */
+            color: #333; /* Dark text color */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #ffb6c1; /* Light pink header background color */
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3em;
+            color: #fff; /* White text color */
+        }
+
+        main {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 80vh;
+        }
+
+        .counter-container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white counter container background color */
+            padding: 30px;
+            border-radius: 20px;
+            width: 50%;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Box shadow for a subtle effect */
+        }
+
+        #worker-count, #patient-count, #duplicate-patient-count {
+            font-size: 2.5em;
+            margin: 10px 0;
+            color: #333; /* Dark text color */
+        }
+
+        #worker-label, #patient-label, #duplicate-patient-label {
+            font-size: 1.8em;
+            margin: 5px 0;
+            color: #555; /* Gray text color */
+        }
+
+        .icon {
+            font-size: 3em;
+            margin: 0 10px;
+        }
+
+        .worker-icon {
+            color: #4CAF50; /* Green worker icon color */
+        }
+
+        .patient-icon {
+            color: #3498db; /* Blue patient icon color */
+        }
+
+        .duplicate-icon {
+            color: #e74c3c; /* Red duplicate patient icon color */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Face Recognition Counter</h1>
+    </header>
+    <main>
+        <div class="counter-container">
+            <div class="icon worker-icon">&#128113;</div>
+            <div id="worker-count">0</div>
+            <div id="worker-label">Workers</div>
+
+            <div class="icon patient-icon">&#128104;</div>
+            <div id="patient-count">0</div>
+            <div id="patient-label">Patients</div>
+
+            <div class="icon duplicate-icon">&#128163;</div>
+            <div id="duplicate-patient-count">0</div>
+            <div id="duplicate-patient-label">Duplicate Patients</div>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('update_counts', function(data) {
+            document.getElementById('worker-count').innerText = data.workerCount;
+            document.getElementById('patient-count').innerText = data.patientCount;
+            document.getElementById('duplicate-patient-count').innerText = data.duplicatePatientCount;
+        });
+
+        socket.on('connect', function() {
+            console.log('Socket connected');
+        });
+    </script>
+</body>
+</html>
